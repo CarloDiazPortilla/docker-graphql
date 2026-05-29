@@ -3,13 +3,13 @@ name: Docker Image CI
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
 
   build:
-
+    env:
+      DOCKER_USER: ${{ secrets.DOCKER_USER }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     runs-on: ubuntu-latest
 
     steps:
@@ -18,9 +18,8 @@ jobs:
       with:
         fetch-depth: 0
     - name: DockerHub authentication
-      env:
-        DOCKER_USER: ${{ secrets.DOCKER_USER }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       run: docker login --password $DOCKER_PASSWORD --username $DOCKER_USER
-    # - name: Build the Docker image
-    #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Build Docker image
+      run: docker build . --file Dockerfile --tag $DOCKER_USER/docker-graphql:0.0.2
+    - name: Push Docker image
+      run: docker push $DOCKER_USER/docker-graphql:0.0.2
