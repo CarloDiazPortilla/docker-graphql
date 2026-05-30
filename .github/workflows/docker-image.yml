@@ -20,6 +20,11 @@ jobs:
     - name: DockerHub authentication
       run: docker login --password $DOCKER_PASSWORD --username $DOCKER_USER
     - name: Build Docker image
-      run: docker build . --file Dockerfile --tag $DOCKER_USER/docker-graphql:0.0.2
+      run: | 
+        docker build . --file Dockerfile \
+          --tag $DOCKER_USER/docker-graphql:0.0.3 \
+          --tag $DOCKER_USER/docker-graphql:latest
     - name: Push Docker image
-      run: docker push $DOCKER_USER/docker-graphql:0.0.2
+      run: |
+        docker push $DOCKER_USER/docker-graphql:0.0.3
+        docker push $DOCKER_USER/docker-graphql:latest
